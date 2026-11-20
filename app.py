@@ -46,7 +46,8 @@ st.caption("Does your support agent cave in under pressure? Same tasks for every
 
 with st.sidebar:
     batches = sorted(runs["batch"].unique(), reverse=True)
-    default = [b for b in batches if b != "selftest"][:1] or batches[:1]
+    default = [b for b in batches if b in ("main", "hard")] or [b for b in batches if b != "selftest"][:1] \
+        or batches[:1]
     sel_batches = st.multiselect("Batch", batches, default=default)
     df = runs[runs["batch"].isin(sel_batches)]
     agents = sorted(df["agent"].unique())

@@ -160,7 +160,7 @@ def main():
                 break
         except Exception as e:
             log("agent error:", repr(e))
-            send({"type": "error", "message": repr(e)[:500], "llm": agent.flush() if agent else []})
+            send({"type": "error", "message": repr(e)[:1500], "llm": agent.flush() if agent else []})
 
 
 if __name__ == "__main__":

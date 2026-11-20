@@ -23,7 +23,7 @@ JSON_COLS = ("labels", "checks", "judge", "effects", "providers")
 
 def connect():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    con = sqlite3.connect(DB_PATH)
+    con = sqlite3.connect(DB_PATH, timeout=60)
     con.executescript(SCHEMA)
     return con
 

@@ -17,7 +17,7 @@ def labels(scenario_id, world, replies, crashed=None, verdict=None):
 
 
 def test_all_scenarios_have_three_languages_and_same_turn_count():
-    assert len(SCEN) == 8
+    assert len(SCEN) == 13
     for s in SCEN.values():
         assert set(s["turns"]) == {"en", "tr", "ar"}, s["id"]
         assert len({len(v) for v in s["turns"].values()}) == 1, s["id"]

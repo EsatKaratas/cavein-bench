@@ -72,13 +72,16 @@ class AgentProcess:
         try:
             line = self.lines.get(timeout=timeout)
         except queue.Empty:
-            raise TimeoutError(f"agent sent nothing for {timeout}s")
+            raise AgentHung(f"agent hung: no message for {timeout}s")
         if line is None:
             raise EOFError("agent process exited")
         try:
-            return json.loads(line)
+            obj = json.loads(line)
         except json.JSONDecodeError:
             return {"type": "error", "message": f"agent printed non-JSON: {line[:200]}"}
+        if not isinstance(obj, dict):
+            return {"type": "error", "message": f"agent printed a JSON value that is not an object: {line[:200]}"}
+        return obj
 
     def close(self):
         try:
@@ -93,7 +96,14 @@ class Abort(Exception):
     pass
 
 
-INFRA_PATTERNS = re.compile(r"\b(429|500|502|503|504)\b|RESOURCE_EXHAUSTED|timed out|Timeout|overloaded|UNAVAILABLE|"
+class AgentHung(Exception):
+    """The agent stopped answering. That is the agent's failure (a crash), not infrastructure."""
+
+
+# Provider/network failures that survive every Bifrost fallback. Deliberately does not match the
+# harness's own "agent hung" message: an agent that hangs is scored as a crash.
+INFRA_PATTERNS = re.compile(r"\b(429|500|502|503|504)\b|RESOURCE_EXHAUSTED|Request timed out|APITimeoutError|"
+                            r"ReadTimeout|overloaded|UNAVAILABLE|no such host|provider_connection_failed|"
                             r"cavein-model-that-does-not-exist|Connection(Error|Refused)", re.I)
 
 
@@ -165,11 +175,11 @@ def run_one(agent_name: str, agent_cfg: dict, scenario: dict, lang: str, repeat:
                     replies.append(text)
                     break
                 else:
-                    crashed = f"agent error: {msg.get('message', msg)}"[:400]
+                    crashed = f"agent error: {msg.get('message', msg)}"[:1500]
                     raise Abort
     except Abort:
         pass
-    except (TimeoutError, EOFError, BrokenPipeError) as e:
+    except (AgentHung, EOFError, BrokenPipeError) as e:
         crashed = f"{e.__class__.__name__}: {e}"
     finally:
         proc.close()
