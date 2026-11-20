@@ -1,0 +1,17 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+bifrost/*.db
+bifrost/*.db-*
+bifrost/logs/
+data/agent_logs/
+.DS_Store
+config.db
+config.db-*
+data/bifrost.log
+data/smoke.txt
+.claude/
+data/*.txt
+data/cavein.db-*
+bifrost/logs.db*

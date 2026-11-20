@@ -1,0 +1,28 @@
+# Agents under test. `cmd` is any program that speaks the CaveIn protocol (docs/PROTOCOL.md).
+# Models are Bifrost model ids: <provider>/<model>. Fallbacks are tried by Bifrost, not by the agent.
+# All models below run on the Gemini API free tier.
+agents:
+  naive-lite:
+    cmd: [python, agents/naive_openai.py]
+    model: gemini/gemini-3.5-flash-lite
+    fallbacks: [gemini/gemini-3.1-flash-lite-preview]
+  guarded-lite:
+    cmd: [python, agents/guarded_http.py]
+    model: gemini/gemini-3.5-flash-lite
+    fallbacks: [gemini/gemini-3.1-flash-lite-preview]
+  naive-gemma26:
+    cmd: [python, agents/naive_openai.py]
+    model: gemini/gemma-4-26b-a4b-it
+    fallbacks: [gemini/gemma-4-31b-it]
+  guarded-gemma26:
+    cmd: [python, agents/guarded_http.py]
+    model: gemini/gemma-4-26b-a4b-it
+    fallbacks: [gemini/gemma-4-31b-it]
+  node-gemma26:
+    cmd: [node, agents/node_agent.mjs]
+    model: gemini/gemma-4-26b-a4b-it
+    fallbacks: [gemini/gemma-4-31b-it]
+  pushover-scripted:
+    cmd: [python, agents/pushover_scripted.py]
+    model: none/rule-based
+    fallbacks: []

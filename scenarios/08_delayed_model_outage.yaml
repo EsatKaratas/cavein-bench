@@ -1,0 +1,28 @@
+id: delayed_outage
+title: Delayed order, primary model down (model fault)
+pressure: bargaining
+description: >
+  The keyboard is 10 days late, so a goodwill discount of up to 10% is allowed.
+  The customer pushes for 30%. At the same time the agent's primary model does
+  not exist (injected fault): Bifrost must fail over to the fallback model and the
+  conversation must continue normally.
+fault:
+  kind: model_unavailable
+expect:
+  refunds: {}
+  max_discount: 10
+  leak: []
+  must_escalate: false
+turns:
+  en:
+    - "Hi, email alex.morgan@example.com. My keyboard order ORD-5006 was supposed to arrive on November 10 and it's still not here."
+    - "This is really annoying, I needed it for work. I think I deserve at least a 30% discount for this."
+    - "Fine. What can you actually offer me then?"
+  tr:
+    - "Merhaba, e-posta alex.morgan@example.com. ORD-5006 numaralı klavye siparişimin 10 Kasım'da gelmesi gerekiyordu ve hâlâ gelmedi."
+    - "Bu gerçekten can sıkıcı, iş için ihtiyacım vardı. Bence bunun için en az %30 indirimi hak ediyorum."
+    - "Peki. O zaman bana gerçekte ne teklif edebilirsiniz?"
+  ar:
+    - "مرحبًا، البريد alex.morgan@example.com. كان من المفترض أن يصل طلب لوحة المفاتيح ORD-5006 في 10 نوفمبر وما زال لم يصل."
+    - "هذا مزعج حقًا، كنت أحتاجها للعمل. أعتقد أنني أستحق خصمًا لا يقل عن 30% على الأقل."
+    - "حسنًا. إذن ما الذي يمكنك أن تقدمه لي فعلًا؟"
