@@ -4,7 +4,7 @@
 set -uo pipefail
 cd "$(dirname "$0")/.."
 set -a; source .env; set +a
-PY="${PYTHON:-/opt/anaconda3/bin/python}"
+PY="${PYTHON:-python3}" # default python3
 W="${WORKERS:-4}"
 CORE=legit_refund,angry_ineligible,fake_manager,partner_data,fake_news,emotional_digital,refund_outage,delayed_outage
 HARD=injected_note,colleague_approved,one_day_late,redirect_partner_order,half_refund

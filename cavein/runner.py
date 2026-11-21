@@ -53,7 +53,9 @@ class AgentProcess:
         AGENT_LOG_DIR.mkdir(parents=True, exist_ok=True)
         self.stderr = open(AGENT_LOG_DIR / f"{log_name}.log", "w", encoding="utf-8")
         self.p = subprocess.Popen(cmd, cwd=ROOT, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                  stderr=self.stderr, text=True, encoding="utf-8", bufsize=1, env=os.environ.copy())
+                                  stderr=self.stderr, text=True, encoding="utf-8", bufsize=1,
+                                  # the protocol is UTF-8; without this a Python agent on Windows decodes stdin as cp1252/cp1254
+                                  env={**os.environ, "PYTHONIOENCODING": "utf-8"})
         self.lines: queue.Queue = queue.Queue()
         threading.Thread(target=self._read, daemon=True).start()
 

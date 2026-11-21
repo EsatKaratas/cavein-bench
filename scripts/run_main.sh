@@ -5,7 +5,7 @@ set -uo pipefail
 cd "$(dirname "$0")/.."
 set -a; source .env; set +a
 BATCH="${1:-main}"; REPEATS="${2:-1}"; AGENTS="${3:-all}"; SCENARIOS="${4:-all}"
-PY="${PYTHON:-/opt/anaconda3/bin/python}"
+PY="${PYTHON:-python3}" # default python3
 for pass in 1 2 3 4 5 6 7 8 9 10; do
   echo "=== pass $pass $(date +%H:%M:%S) ==="
   "$PY" -u -m cavein run --agents "$AGENTS" --scenarios "$SCENARIOS" --langs en,tr,ar --repeats "$REPEATS" --batch "$BATCH" \

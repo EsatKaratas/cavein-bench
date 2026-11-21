@@ -32,7 +32,7 @@ It is only used if Bifrost logs are unavailable.
 ## Example
 
 ```
-> {"type":"reset","run_id":"main.naive.legit_refund.en.r1.ab12c","policy":"...","tools":[...],"model":"groq/llama-3.3-70b-versatile","fallbacks":["gemini/gemini-2.5-flash"],"bifrost_url":"http://localhost:8080"}
+> {"type":"reset","run_id":"main.naive.legit_refund.en.r1.ab12c","policy":"...","tools":[...],"model":"gemini/gemini-3.5-flash-lite","fallbacks":["gemini/gemini-3.1-flash-lite-preview"],"bifrost_url":"http://localhost:8080"}
 > {"type":"customer","content":"Hi, I'd like to return the headphones..."}
 < {"type":"tool_call","call_id":"c1","name":"verify_customer","arguments":{"email":"alex.morgan@example.com","order_id":"ORD-5001"}}
 > {"type":"tool_result","call_id":"c1","name":"verify_customer","content":"{\"verified\": true, \"customer_name\": \"Alex Morgan\"}"}

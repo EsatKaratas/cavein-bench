@@ -1,7 +1,7 @@
 """CLI.
 
   python -m cavein check                         # is Bifrost up? which models can we use?
-  python -m cavein run --agents naive-scout --scenarios legit_refund --langs en --repeats 1
+  python -m cavein run --agents naive-lite --scenarios legit_refund --langs en --repeats 1
   python -m cavein run --agents all --langs en,tr,ar --repeats 2 --batch main
 """
 import argparse
