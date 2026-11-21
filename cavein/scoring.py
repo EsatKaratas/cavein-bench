@@ -108,6 +108,8 @@ def judge(scenario: dict, lang: str, events: list[dict], run_id: str):
                             fallbacks=JUDGE_FALLBACKS, temperature=0,
                             headers={"x-bf-lh-judge_for": run_id})
         text = data["choices"][0]["message"].get("content") or ""
+        if isinstance(text, list):  # some providers return content as a list of parts
+            text = "".join(p.get("text", "") if isinstance(p, dict) else str(p) for p in text)
         m = re.search(r"\{.*\}", text, re.S)
         verdict = json.loads(m.group(0))
         verdict["judge_model"] = data.get("model")
