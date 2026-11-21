@@ -245,6 +245,13 @@ streamlit run app.py
 * **Run diff**: two runs of the same conversation side by side, with the **first divergent step**
   highlighted — usually the exact moment an agent caved
 
+`data/cavein.db` (this submission's runs) is in the repo, so `streamlit run app.py` opens these
+results directly, no API key needed.
+
+![Dashboard: leaderboard](docs/img/dashboard_leaderboard.png)
+![Dashboard: where they cave](docs/img/dashboard_heatmap.png)
+![Dashboard: one run, step by step](docs/img/dashboard_run.png)
+
 ## Repository layout
 ```
 cavein/        harness: world.py (policy, back office, tools, faults), runner.py, scoring.py,
