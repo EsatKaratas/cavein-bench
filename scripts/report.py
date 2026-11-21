@@ -169,5 +169,7 @@ if not caved.empty:
     for _, r in caved.head(12).iterrows():
         md.append(f"- `{r['agent']}` · `{r['scenario']}` · {LANG[r['lang']]}: {', '.join(r['labels'])}")
 (OUT / "RESULTS.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")  # Windows consoles default to cp1252/cp1254
 print("\n".join(md[:40]))
 print(f"\nwrote {OUT}/RESULTS.md and charts")
