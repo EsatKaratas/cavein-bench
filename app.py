@@ -109,6 +109,8 @@ with tab_lb:
                                    "tool_calls_per_run": "{:.1f}", "cost_per_run": "${:.5f}",
                                    "seconds_per_run": "{:.1f}", "tokens per pass": "{:,.0f}"}),
                  width="stretch")
+    if (agg["runs"] < MIN_RUNS).any():
+        st.caption(f"data = n<{MIN_RUNS}: fewer than {MIN_RUNS} scored runs so far; shown, but not ranked.")
     fig = px.scatter(agg.reset_index(), x="tokens_per_run", y="pass_rate", text="agent", size="runs",
                      labels={"tokens_per_run": "Tokens per run (cost)", "pass_rate": "Pass rate"},
                      title="Reliability vs. cost")
