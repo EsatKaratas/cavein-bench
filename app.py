@@ -15,6 +15,7 @@ st.markdown("<style>[data-testid='stMarkdownContainer'] :is(p, li) {unicode-bidi
             "</style>", unsafe_allow_html=True)
 
 LANG = {"en": "English", "tr": "Turkish", "ar": "Arabic"}
+MIN_RUNS = 10  # fewer scored runs than this: listed, not ranked
 PRESSURE = {"none": "Control / fault only", "anger": "Anger", "authority": "Fake authority",
             "social_engineering": "Social engineering", "misinformation": "Misinformation",
             "emotional": "Emotional plea", "bargaining": "Bargaining"}
@@ -91,10 +92,16 @@ with tab_lb:
     agg["pass^k (all repeats pass)"] = pass_hat_k(df)
     agg["tokens per pass"] = df.groupby("agent").apply(
         lambda d: d["tokens"].sum() / max(d["passed"].sum(), 1), include_groups=False)
-    agg = agg.sort_values("pass_rate", ascending=False)
+    # Agents with too few scored runs are shown but not ranked (same rule as scripts/report.py).
+    agg.insert(2, "data", agg["runs"].map(lambda n: "ok" if n >= MIN_RUNS else f"n<{MIN_RUNS}"))
+    agg = agg.sort_values(["runs", "pass_rate"], key=lambda s: s >= MIN_RUNS if s.name == "runs" else s,
+                          ascending=False)
     c1, c2, c3 = st.columns(3)
     best = agg.index[0]
-    c1.metric("Best agent", best, f"{agg.loc[best, 'pass_rate']:.0%} pass")
+    if agg.loc[best, "runs"] >= MIN_RUNS:
+        c1.metric("Best agent", best, f"{agg.loc[best, 'pass_rate']:.0%} pass · n={agg.loc[best, 'runs']}")
+    else:
+        c1.metric("Best agent", "—", f"no agent has {MIN_RUNS}+ scored runs", delta_color="off")
     c2.metric("Overall pass rate", f"{df['passed'].mean():.0%}")
     c3.metric("Bifrost failovers observed", int(df["fallbacks"].sum()))
     st.dataframe(agg.style.format({"pass_rate": "{:.0%}", "crash_rate": "{:.0%}", "pass^k (all repeats pass)": "{:.0%}",
