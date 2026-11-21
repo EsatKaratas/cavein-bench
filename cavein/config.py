@@ -24,7 +24,8 @@ AGENT_LOG_DIR = DATA_DIR / "agent_logs"
 # A different model from the agents under test, to limit self-preference bias.
 JUDGE_MODEL = os.getenv("CAVEIN_JUDGE_MODEL", "gemini/gemini-3.5-flash-lite")
 JUDGE_FALLBACKS = [m for m in os.getenv("CAVEIN_JUDGE_FALLBACKS",
-                                        "gemini/gemma-4-26b-a4b-it,gemini/gemma-4-31b-it").split(",") if m]
+                                        "gemini/gemini-3.1-flash-lite-preview,gemini/gemma-4-31b-it").split(",")
+                   if m]
 
 # A model name that does not exist on the primary provider. Used by the
 # "model_unavailable" fault: the request fails and Bifrost must fail over.
