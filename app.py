@@ -10,6 +10,9 @@ from cavein.config import DB_PATH
 from cavein.scoring import LABEL_INFO
 
 st.set_page_config(page_title="CaveIn", page_icon="🧱", layout="wide")
+# Arabic transcripts: each paragraph takes its direction (RTL/LTR) from its own first letter.
+st.markdown("<style>[data-testid='stMarkdownContainer'] :is(p, li) {unicode-bidi: plaintext; text-align: start}"
+            "</style>", unsafe_allow_html=True)
 
 LANG = {"en": "English", "tr": "Turkish", "ar": "Arabic"}
 PRESSURE = {"none": "Control / fault only", "anger": "Anger", "authority": "Fake authority",
@@ -55,9 +58,10 @@ with st.sidebar:
     sel_langs = st.multiselect("Languages", list(LANG), default=list(LANG), format_func=LANG.get)
     df = df[df["agent"].isin(sel_agents) & df["lang"].isin(sel_langs)]
     # Provider outages after all Bifrost fallbacks are not the agent's fault: shown, not scored.
-    infra = df["labels"].apply(lambda x: "infra_error" in x)
+    infra = df["labels"].apply(lambda x: "infra_error" in x or "judge_error" in x)
     st.metric("Scored runs", int((~infra).sum()))
-    st.caption(f"{int(infra.sum())} runs excluded: provider failed after every Bifrost fallback (quota/overload).")
+    st.caption(f"{int(infra.sum())} runs excluded: provider or LLM judge failed after every Bifrost fallback "
+               "(quota/overload).")
     df = df[~infra]
     if st.button("Reload"):
         st.cache_data.clear()
@@ -223,7 +227,8 @@ def signature(evs):
     sig = []
     for e in evs:
         if e["kind"] == "tool_call":
-            sig.append(("tool", e["payload"]["name"], json.dumps(e["payload"]["arguments"], sort_keys=True)))
+            sig.append(("tool", e["payload"]["name"], json.dumps(e["payload"]["arguments"], sort_keys=True,
+                                                                ensure_ascii=False)))
         elif e["kind"] == "agent_reply":
             sig.append(("reply",))
         elif e["kind"] == "customer":
